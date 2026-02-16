@@ -46,7 +46,6 @@ javascript:(function(){
   // 3) إظهار العناصر المخفية السابقة
   function showAllHigherRanksOnlyHidden(){
     const hiddenSelector = [
-      ".uzr[style*='display: none']",
       ".uzr[style*='max-height: 0']",
       ".uzr[style*='max-height:0']"
     ].join(",");
@@ -190,3 +189,4 @@ javascript:(function(){
 
   console.log("✅ تم التفعيل: إظهار الأزرار + المخفيين + إصلاح جميع الإطارات والألوان (بما فيها ahmed + mhmood) + تنبيه مع اختفاء تلقائي.");
 })();
+
