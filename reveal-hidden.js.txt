@@ -58,10 +58,25 @@ javascript: (function() {
             const searchBox = document.getElementById('usearch');
             if (searchBox && searchBox.value.trim().length > 0) return;
             
-            el.style.display = '';
-            el.style.maxHeight = '';
+            // منع إضافة الكلاس __rv_me نهائياً
+            if (!el._patched) {
+                const originalAdd = el.classList.add;
+                el.classList.add = function(...args) {
+                    const filtered = args.filter(cls => cls !== '__rv_me');
+                    return originalAdd.apply(this, filtered);
+                };
+                el._patched = true;
+            }
+            
+            // إزالة الكلاس إذا كان موجوداً بالفعل
+            if (el.classList.contains('__rv_me')) {
+                el.classList.remove('__rv_me');
+            }
+            
+            el.style.display = 'block';
+            el.style.maxHeight = 'none';
             el.querySelectorAll('[style*="display: none"]').forEach(inner => {
-                inner.style.display = '';
+                inner.style.display = 'block';
             });
             
             const ustat = el.querySelector("img.ustat, img[src*='s0.png'], img[src*='s4.png']");
@@ -90,6 +105,8 @@ javascript: (function() {
             }
         });
     }
+    
+    
     
     // 4) إصلاح الإطارات والألوان بشكل شامل
     function fixHiddenFrames() {
@@ -120,6 +137,12 @@ javascript: (function() {
             
             if (el.classList.contains('mhmood')) {
                 el.classList.remove('mhmood');
+                el.style.width = '';
+                el.style.height = '';
+            }
+            
+            if (el.classList.contains('__rv_me')) {
+                el.classList.remove('__rv_me');
                 el.style.width = '';
                 el.style.height = '';
             }
