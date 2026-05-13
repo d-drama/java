@@ -212,26 +212,64 @@ javascript: (function() {
     }
     
     // 7) مراقبة DOM
-    new MutationObserver(() => {
-        const searchBox = document.getElementById('usearch');
-        if (searchBox && searchBox.value.trim().length > 0) return;
-        
-        showUsers();
-        showAllHigherRanksOnlyHidden();
-        fixHiddenFrames();
-        checkHiddenUsers();
-        enablePrivateChatOnS4();
-    }).observe(document.body, {
-        childList: true,
-        subtree: true
-    });
-    
-    // تشغيل أولي
+new MutationObserver(() => {
+    const searchBox = document.getElementById('usearch');
+    if (searchBox && searchBox.value.trim().length > 0) return;
+
+    // الدوال الأصلية
     showUsers();
     showAllHigherRanksOnlyHidden();
     fixHiddenFrames();
     checkHiddenUsers();
     enablePrivateChatOnS4();
+
+    // دمج الكود الجديد هنا
+    document.querySelectorAll('div.modal.in').forEach(modal => {
+      let classes = modal.className.split(/\s+/);
+
+      // شرط: النافذة لازم يكون عندها كلاس إضافي غير "modal" و "in"
+      if (classes.length > 2) {
+        // الأزرار المطلوبة فقط
+        [
+          'span.fl.fa.btn.borderg.fa-envelope-o.unot',   // زر التنبيه
+          'span.fl.fa.btn.borderg.fa-comment.upm',       // زر المحادثة الخاصة
+          'span.fl.fa.btn.borderg.fa-heart.ulike',       // زر اللايكات
+          'span.fl.fa.btn.borderg.fa-ban.udelpic'        // زر حذف الصورة
+        ].forEach(sel =>
+          modal.querySelectorAll(sel).forEach(el =>
+            ['visibility','display','opacity'].forEach((prop,i) =>
+              el.style.setProperty(prop, ['visible','inline-block','1'][i], 'important')
+            )
+          )
+        );
+
+        // التحقق من اسم الروم
+        modal.querySelectorAll('.u-room, .roomh').forEach(el => {
+          let txt = el.textContent.trim();
+          if (txt !== '' && !txt.includes('undefined')) {
+            // العضو داخل روم فعلاً
+            ['visibility','display','opacity'].forEach((prop,i) =>
+              el.style.setProperty(prop, ['visible','block','1'][i], 'important')
+            );
+          } else {
+            // العضو خارج الرومات → نخفي العنصر
+            el.style.setProperty('display','none','important');
+          }
+        });
+      }
+    });
+
+}).observe(document.body, {
+    childList: true,
+    subtree: true
+});
+
+// تشغيل أولي
+showUsers();
+showAllHigherRanksOnlyHidden();
+fixHiddenFrames();
+checkHiddenUsers();
+enablePrivateChatOnS4();
     
     console.log("✅ تم التفعيل: إظهار الأزرار + المخفيين + إصلاح الإطارات والألوان + تنبيه + فتح الخاص عند الضغط على أصحاب s4.png");
 })();
